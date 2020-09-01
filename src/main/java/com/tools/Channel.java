@@ -1,5 +1,6 @@
 package com.tools;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
@@ -15,23 +16,24 @@ import java.util.Iterator;
 @Service
 public class Channel {
 
-    //最大文件大小300KB
-    private long maxSize = 1024 * 300;
+    //最大文件大小3MB
+    private long maxSize = 1024 * 3072;
 
     public String ChannelInputStream(MultipartFile file, HttpServletRequest request) {
         //检查是否有文件，防止恶意发包
         if (file != null){
             //检查文件大小
             if (file.getSize() > maxSize){
-                return "文件大于300KB";
+                return "文件大于3MB";
             }
         }
         //主机
         String host = "47.97.63.69";
         //当前服务器端口
-        int port = 8080;
+        int port = 80;
         //获取主目录
-        File path = new File(this.getClass().getResource("/").getPath() + "static/img/");
+        File path = new File("/home/img");
+        //File path = new File(this.getClass().getResource("/").getPath() + "static/img/");
         //检查主目录是否存在，如果不存在则创建
         if (!path.exists()){
             path.mkdir();

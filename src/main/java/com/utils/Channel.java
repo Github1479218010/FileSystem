@@ -1,6 +1,5 @@
-package com.tools;
+package com.utils;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
@@ -17,7 +16,13 @@ import java.util.Iterator;
 public class Channel {
 
     //最大文件大小3MB
-    private long maxSize = 1024 * 3072;
+    private final long maxSize = 1024 * 3072;
+    //根路径
+    private final String pathString = "C:/Users/Aspiring/Desktop/upload/img/";
+    //主机
+    private final String host = "47.97.63.69";
+    //当前服务器端口
+    private final String port = "9999";
 
     public String ChannelInputStream(MultipartFile file, HttpServletRequest request) {
         //检查是否有文件，防止恶意发包
@@ -27,16 +32,12 @@ public class Channel {
                 return "文件大于3MB";
             }
         }
-        //主机
-        String host = "47.97.63.69";
-        //当前服务器端口
-        int port = 80;
+
         //获取主目录
-        File path = new File("/home/img");
-        //File path = new File(this.getClass().getResource("/").getPath() + "static/img/");
+        File path = new File(pathString);
         //检查主目录是否存在，如果不存在则创建
         if (!path.exists()){
-            path.mkdir();
+            path.mkdirs();
         }
         //获取原文件名
         String fileName = file.getOriginalFilename();
@@ -56,13 +57,13 @@ public class Channel {
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
         //输出文件目的地
-        File outFile = new File(path.getPath() + "/" + newName + suffix);
+        File outFile = new File(path.getPath() + "\\" + newName + suffix);
         //接收读取数据的数组
         byte[] bytes = null;
         try {
             //获取文件输入流
             inputStream = (FileInputStream) file.getInputStream();
-            //因为文件在300KB内，使用available()是为了保证一次性读完
+            //因为文件在3MB内，使用available()是为了保证一次性读完
             bytes = new byte[inputStream.available()];
             if (!outFile.exists()){
                 outputStream = new FileOutputStream(outFile);
